@@ -34,11 +34,13 @@
 // });
 
 const express = require('express');
+const cors = require('cors');
 const app = express();
 const categoriasRouter = require('./routes/categorias');
 const videosRouter = require('./routes/videos');
 
-// Middleware para tratar requisições JSON
+// Configurar CORS
+app.use(cors());  // Permite todas as origens (use em desenvolvimento)
 app.use(express.json());
 
 // Usar as rotas
@@ -46,6 +48,6 @@ app.use('/categorias', categoriasRouter);
 app.use('/videos', videosRouter);
 
 const port = 8082;
-app.listen(port, () => {
+app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
