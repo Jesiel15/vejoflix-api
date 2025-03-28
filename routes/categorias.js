@@ -15,10 +15,15 @@ function writeDB(data) {
   fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
 }
 
-// Listar todas as categorias
+// Listar todas as categorias com vídeos
 router.get('/', (req, res) => {
   const db = readDB();
-  res.json(db.categorias);
+  const categoriasComVideos = db.categorias.map(categoria => {
+    const videosDaCategoria = db.videos.filter(video => video.categoriaId === categoria.id);
+    return { ...categoria, videos: videosDaCategoria };
+  });
+  
+  res.json(categoriasComVideos);
 });
 
 // Criar uma nova categoria
