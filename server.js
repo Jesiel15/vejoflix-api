@@ -32,16 +32,22 @@
 // app.listen(PORT, () => {
 //   console.log(`Servidor rodando na porta ${PORT}`);
 // });
-
 const express = require('express');
 const cors = require('cors');
 const app = express();
 const categoriasRouter = require('./routes/categorias');
 const videosRouter = require('./routes/videos');
 
-// Configurar CORS para permitir apenas o domínio do Vercel
+// Configurar CORS para permitir múltiplos domínios
 const corsOptions = {
-  origin: 'https://<seu-app>.vercel.app',  // Substitua com o domínio do seu app Vercel
+  origin: function (origin, callback) {
+    // Permitir localhost e o domínio do Vercel
+    if (origin === 'http://localhost:3000' || origin === 'https://vejoflix.vercel.app') {
+      callback(null, true);
+    } else {
+      callback(new Error('Acesso proibido'));
+    }
+  },
   methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos permitidos
   allowedHeaders: ['Content-Type'],  // Cabeçalhos permitidos
 };
