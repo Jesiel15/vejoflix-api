@@ -39,8 +39,14 @@ const app = express();
 const categoriasRouter = require('./routes/categorias');
 const videosRouter = require('./routes/videos');
 
-// Configurar CORS
-app.use(cors());  // Permite todas as origens (use em desenvolvimento)
+// Configurar CORS para permitir apenas o domínio do Vercel
+const corsOptions = {
+  origin: 'https://<seu-app>.vercel.app',  // Substitua com o domínio do seu app Vercel
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos permitidos
+  allowedHeaders: ['Content-Type'],  // Cabeçalhos permitidos
+};
+
+app.use(cors(corsOptions));  // Configuração do CORS
 app.use(express.json());
 
 // Usar as rotas
@@ -51,3 +57,4 @@ const port = 8082;
 app.listen(port, '0.0.0.0', () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
+
