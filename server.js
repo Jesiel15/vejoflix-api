@@ -33,18 +33,19 @@
 //   console.log(`Servidor rodando na porta ${PORT}`);
 // });
 
-const jsonServer = require('json-server');
-const path = require('path');
+const express = require('express');
+const app = express();
+const categoriasRouter = require('./routes/categorias');
+const videosRouter = require('./routes/videos');
 
-const server = jsonServer.create();
-const router = jsonServer.router(path.join(__dirname, 'data/db.json')); // Certifique-se de que o caminho para db.json esteja correto
-const middlewares = jsonServer.defaults();
+// Middleware para tratar requisições JSON
+app.use(express.json());
 
-const port = process.env.PORT || 8082;
+// Usar as rotas
+app.use('/categorias', categoriasRouter);
+app.use('/videos', videosRouter);
 
-server.use(middlewares);
-server.use(router);
-
-server.listen(port, "0.0.0.0", () => {
-  console.log(`JSON Server is running on port ${port}`);
+const port = 8082;
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
 });
