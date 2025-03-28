@@ -45,8 +45,8 @@ const app = express();
 
 // Caminho dos certificados (ajuste conforme necessário)
 const options = {
-  key: fs.readFileSync("/etc/letsencrypt/live/SEU_DOMINIO.com/privkey.pem"),
-  cert: fs.readFileSync("/etc/letsencrypt/live/SEU_DOMINIO.com/fullchain.pem"),
+  key: fs.readFileSync("/etc/ssl/private/selfsigned.key"),
+  cert: fs.readFileSync("/etc/ssl/certs/selfsigned.crt"),
 };
 
 // Configuração do CORS
