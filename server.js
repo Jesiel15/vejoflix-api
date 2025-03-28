@@ -33,28 +33,40 @@
 //   console.log(`Servidor rodando na porta ${PORT}`);
 // });
 
+const express = require("express");
+const https = require("https");
+const fs = require("fs");
+const cors = require("cors");
 
-const express = require('express');
-const cors = require('cors');
+const categoriasRouter = require("./routes/categorias");
+const videosRouter = require("./routes/videos");
+
 const app = express();
-const categoriasRouter = require('./routes/categorias');
-const videosRouter = require('./routes/videos');
 
-// Configurar CORS para permitir múltiplos domínios
-const corsOptions = {
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],  // Métodos permitidos
-  allowedHeaders: ['Content-Type'],  // Cabeçalhos permitidos
+// Caminho dos certificados (ajuste conforme necessário)
+const options = {
+  key: fs.readFileSync("/etc/letsencrypt/live/SEU_DOMINIO.com/privkey.pem"),
+  cert: fs.readFileSync("/etc/letsencrypt/live/SEU_DOMINIO.com/fullchain.pem"),
 };
 
-app.use(cors(corsOptions));  // Configuração do CORS
+// Configuração do CORS
+const corsOptions = {
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  allowedHeaders: ["Content-Type"],
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Usar as rotas
-app.use('/categorias', categoriasRouter);
-app.use('/videos', videosRouter);
+app.use("/categorias", categoriasRouter);
+app.use("/videos", videosRouter);
 
-const port = 8082;
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Servidor rodando na porta ${port}`);
+// Iniciar servidor HTTPS na porta 443
+https.createServer(options, app).listen(443, "0.0.0.0", () => {
+  console.log("Servidor HTTPS rodando na porta 443");
 });
 
+// (Opcional) Servidor HTTP para redirecionar para HTTPS
+app.listen(80, "0.0.0.0", () => {
+  console.log("Servidor HTTP rodando na porta 80");
+});
